@@ -1,0 +1,43 @@
+import java.util.*;
+public class Temperature
+{
+    public static void main()
+    {
+        Scanner sc=new Scanner (System.in);
+            System.out.println("Are you entering the degree of temperature: \n1.in Celcius\n2.in Fahrenheite\n3.in Kelvin?\n");
+            int opt=sc.nextInt();
+            switch(opt)
+            {
+            case 1:
+                System.out.println("Enter the temperature in Celcius:");
+                double tc1=sc.nextDouble();
+                double tf1=tc1*(9/5)+32;  
+                double tk1=273+tc1;
+                System.out.println("Temperature in Fahrenheite: "+tf1+" F");
+                System.out.println("Temperature in Kelvin: "+tk1+" K");   
+                break;
+        
+            case 2:
+                System.out.println("Enter the temperature in Fahrenheite:");
+                double tf2=sc.nextDouble();
+                double tc2=(tf2-32)*(5/9);   
+                double tk2=tc2+273;
+                System.out.println("Temperature in Celcius: "+tc2+" C");
+                System.out.println("Temperature in Kelvin: "+tk2+" K");    
+                break;
+                
+            case 3:
+                System.out.println("Enter the temperature in Kelvin:");
+                double tk3=sc.nextDouble();
+                double tc3=tk3-273;  
+                double tf3=(tk3-273)*(9/5)+32;
+                System.out.println("Temperature in Celcius: "+tc3+" C");
+                System.out.println("Temperature in Fahrenheite: "+tf3+" F");    
+                break;
+                
+            default:System.out.println("Please select a valid option !");
+            
+        
+        }
+    }
+}
