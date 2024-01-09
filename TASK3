@@ -1,0 +1,140 @@
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+class Contact {
+    String name;
+    String phoneNumber;
+    String emailAddress;
+
+    public Contact(String name, String phoneNumber, String emailAddress) {
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.emailAddress = emailAddress;
+    }
+
+    @Override
+    public String toString() {
+        return "Name: " + name + ", Phone Number: " + phoneNumber + ", Email: " + emailAddress;
+    }
+}
+
+public class ContactManager {
+    private static final String FILE_NAME = "contacts.txt";
+    private static List<Contact> contacts = new ArrayList<>();
+
+    public static void main(String[] args) {
+        loadContactsFromFile();
+
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            System.out.println("Contact Manager Menu:");
+            System.out.println("1. Add Contact");
+            System.out.println("2. View Contacts");
+            System.out.println("3. Edit Contact");
+            System.out.println("4. Delete Contact");
+            System.out.println("5. Exit");
+            System.out.print("Enter your choice: ");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+
+            switch (choice) {
+                case 1:
+                    addContact(scanner);
+                    break;
+                case 2:
+                    viewContacts();
+                    break;
+                case 3:
+                    editContact(scanner);
+                    break;
+                case 4:
+                    deleteContact(scanner);
+                    break;
+                case 5:
+                    saveContactsToFile();
+                    System.out.println("Exiting program.");
+                    System.exit(0);
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        }
+    }
+
+    private static void addContact(Scanner scanner) {
+        System.out.print("Enter name: ");
+        String name = scanner.nextLine();
+
+        System.out.print("Enter phone number: ");
+        String phoneNumber = scanner.nextLine();
+
+        System.out.print("Enter email address: ");
+        String emailAddress = scanner.nextLine();
+
+        Contact newContact = new Contact(name, phoneNumber, emailAddress);
+        contacts.add(newContact);
+
+        System.out.println("Contact added successfully!");
+    }
+
+    private static void viewContacts() {
+        if (contacts.isEmpty()) {
+            System.out.println("No contacts available.");
+        } else {
+            System.out.println("Contacts:");
+            for (Contact contact : contacts) {
+                System.out.println(contact);
+            }
+        }
+    }
+
+    private static void editContact(Scanner scanner) {
+        System.out.print("Enter the name of the contact to edit: ");
+        String searchName = scanner.nextLine();
+
+        for (Contact contact : contacts) {
+            if (contact.name.equals(searchName)) {
+                System.out.print("Enter new name: ");
+                contact.name = scanner.nextLine();
+
+                System.out.print("Enter new phone number: ");
+                contact.phoneNumber = scanner.nextLine();
+
+                System.out.print("Enter new email address: ");
+                contact.emailAddress = scanner.nextLine();
+
+                System.out.println("Contact edited successfully!");
+                return;
+            }
+        }
+
+        System.out.println("Contact not found.");
+    }
+
+    private static void deleteContact(Scanner scanner) {
+        System.out.print("Enter the name of the contact to delete: ");
+        String searchName = scanner.nextLine();
+
+        contacts.removeIf(contact -> contact.name.equals(searchName));
+        System.out.println("Contact deleted successfully!");
+    }
+
+    private static void loadContactsFromFile() {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(FILE_NAME))) {
+            contacts = (List<Contact>) ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            // File does not exist or an error occurred during deserialization
+        }
+    }
+
+    private static void saveContactsToFile() {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_NAME))) {
+            oos.writeObject(contacts);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
